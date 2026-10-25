@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MT Tech Hub - Next-Gen Electronics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            cyan: '#06b6d4',
+                            violet: '#6366f1',
+                            purple: '#8b5cf6',
+                            dark: '#0f172a',
+                            darker: '#090d16'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #090d16;
+            color: #f8fafc;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #06b6d4, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-btn {
+            background: linear-gradient(135deg, #6366f1, #06b6d4);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gradient-btn:hover {
+            box-shadow: 0 6px 28px rgba(6, 182, 212, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .neon-border { box-shadow: 0 0 15px rgba(99, 102, 241, 0.25); }
+
+        .slide-item { transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #090d16; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6366f1; }
+
+        @keyframes modalPop {
+            0% { opacity: 0; transform: scale(0.92); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .animate-modal { animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* line-clamp fallback (Tailwind CDN may not include it in every build) */
+        .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+</head>
+
+<body class="font-sans min-h-screen flex flex-col antialiased selection:bg-brand-violet selection:text-white">
+
+    <!-- ================= HEADER ================= -->
+    <header class="glass-panel sticky top-0 z-40 border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-3 cursor-pointer group" onclick="navigateTo('home')">
+                    <div class="gradient-btn p-3 rounded-2xl text-white font-extrabold text-xl group-hover:rotate-6 transition-transform">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-black tracking-wider text-white">MT <span class="gradient-text">TECH HUB</span></span>
+                        <p class="text-[10px] text-gray-400 font-medium tracking-widest uppercase">Next-Gen Electronics</p>
+                    </div>
+                </div>
+
+                <nav class="hidden md:flex items-center space-x-2 bg-slate-950/50 p-1.5 rounded-2xl border border-slate-800">
+                    <button id="nav-home" onclick="navigateTo('home')"
+                        class="nav-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all text-white bg-slate-800/90 shadow-sm">
+                        <i class="fa-solid fa-house mr-1.5 text-xs text-brand-cyan"></i> Home
+                    </button>
+                    <button id="nav-promotion" onclick="navigateTo('promotion')"
+                        class="nav-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all text-gray-400 hover:text-white hover:bg-slate-800/50">
+                        <i class="fa-solid fa-fire mr-1.5 text-xs text-brand-violet"></i> Promotion
+                    </button>
+                    <button id="nav-about" onclick="navigateTo('about')"
+                        class="nav-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all text-gray-400 hover:text-white hover:bg-slate-800/50">
+                        <i class="fa-solid fa-circle-info mr-1.5 text-xs text-purple-400"></i> About Us
+                    </button>
+                </nav>
+
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleCartModal()" aria-label="Open cart"
+                        class="relative p-3 bg-slate-900 hover:bg-slate-800 rounded-2xl text-gray-300 hover:text-white transition-all border border-slate-800">
+                        <i class="fa-solid fa-bag-shopping text-lg"></i>
+                        <span id="cart-count"
+                            class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-brand-violet to-brand-cyan text-slate-950 text-xs font-black rounded-full h-5 w-5 flex items-center justify-center shadow-lg">0</span>
+                    </button>
+
+                    <button onclick="toggleMobileMenu()" aria-label="Open menu"
+                        class="md:hidden p-3 bg-slate-900 rounded-2xl text-gray-400 hover:text-white border border-slate-800">
+                        <i class="fa-solid fa-bars-staggered text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-t border-slate-800 px-4 py-4 space-y-2">
+            <button onclick="navigateTo('home'); toggleMobileMenu();"
+                class="block w-full text-left px-4 py-3 rounded-xl font-medium text-gray-200 hover:bg-slate-800">Home</button>
+            <button onclick="navigateTo('promotion'); toggleMobileMenu();"
+                class="block w-full text-left px-4 py-3 rounded-xl font-medium text-gray-200 hover:bg-slate-800">Promotion</button>
+            <button onclick="navigateTo('about'); toggleMobileMenu();"
+                class="block w-full text-left px-4 py-3 rounded-xl font-medium text-gray-200 hover:bg-slate-800">About Us</button>
+        </div>
+    </header>
+
+    <!-- ================= MAIN ================= -->
+    <main class="flex-grow">
+
+        <!-- PAGE 1: HOME -->
+        <section id="page-home" class="page-view max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+            <div class="glass-panel rounded-3xl p-2 relative overflow-hidden group border border-slate-800 shadow-2xl">
+                <div id="slider-wrapper" class="relative h-72 sm:h-96 md:h-[420px] w-full rounded-2xl overflow-hidden bg-slate-950">
+                    <div id="slider-container" class="relative w-full h-full"></div>
+
+                    <button onclick="prevSlide()" aria-label="Previous slide"
+                        class="absolute left-4 top-1/2 -translate-y-1/2 glass-panel p-3.5 rounded-2xl text-white/80 hover:text-white hover:scale-110 transition z-20">
+                        <i class="fa-solid fa-chevron-left text-sm"></i>
+                    </button>
+                    <button onclick="nextSlide()" aria-label="Next slide"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 glass-panel p-3.5 rounded-2xl text-white/80 hover:text-white hover:scale-110 transition z-20">
+                        <i class="fa-solid fa-chevron-right text-sm"></i>
+                    </button>
+
+                    <div id="slider-indicators" class="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center space-x-2 z-20"></div>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-slate-800/80">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Discover Tech Catalog</h2>
+                        <p class="text-xs sm:text-sm text-gray-400">Curated hardware, smartphones, audio & smart gear</p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                        <div class="relative flex-grow sm:flex-grow-0">
+                            <input type="text" id="search-input" oninput="filterProducts()" placeholder="Search catalog..."
+                                class="w-full sm:w-56 pl-10 pr-4 py-2.5 bg-slate-900/90 border border-slate-800 rounded-xl text-sm focus:outline-none focus:border-brand-violet text-white placeholder-gray-500">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-500 text-xs"></i>
+                        </div>
+
+                        <div id="category-tabs" class="flex items-center space-x-1 bg-slate-950/80 p-1 rounded-xl border border-slate-800 overflow-x-auto">
+                            <button onclick="selectCategory('all')" class="cat-tab px-4 py-1.5 rounded-lg text-xs font-bold transition text-white bg-slate-800" data-cat="all">All</button>
+                            <button onclick="selectCategory('Laptop')" class="cat-tab px-4 py-1.5 rounded-lg text-xs font-bold transition text-gray-400 hover:text-white" data-cat="Laptop">Laptops</button>
+                            <button onclick="selectCategory('Smartphone')" class="cat-tab px-4 py-1.5 rounded-lg text-xs font-bold transition text-gray-400 hover:text-white" data-cat="Smartphone">Phones</button>
+                            <button onclick="selectCategory('Audio')" class="cat-tab px-4 py-1.5 rounded-lg text-xs font-bold transition text-gray-400 hover:text-white" data-cat="Audio">Audio</button>
+                            <button onclick="selectCategory('Wearables')" class="cat-tab px-4 py-1.5 rounded-lg text-xs font-bold transition text-gray-400 hover:text-white" data-cat="Wearables">Wearables</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
+                    <div class="glass-panel p-6 rounded-2xl flex items-center space-x-4 border border-slate-800/80 hover:border-brand-cyan/40 transition">
+                        <div class="p-4 bg-brand-cyan/10 text-brand-cyan rounded-2xl text-2xl"><i class="fa-solid fa-bolt"></i></div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">Ultra Fast Shipping</h4>
+                            <p class="text-xs text-gray-400">Same-day dispatch on prime gear</p>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl flex items-center space-x-4 border border-slate-800/80 hover:border-brand-violet/40 transition">
+                        <div class="p-4 bg-brand-violet/10 text-brand-violet rounded-2xl text-2xl"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">2-Year MT Protection</h4>
+                            <p class="text-xs text-gray-400">Comprehensive hardware coverage</p>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl flex items-center space-x-4 border border-slate-800/80 hover:border-purple-400/40 transition">
+                        <div class="p-4 bg-purple-500/10 text-purple-400 rounded-2xl text-2xl"><i class="fa-solid fa-headset"></i></div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">Dedicated Tech Team</h4>
+                            <p class="text-xs text-gray-400">Real engineers ready to assist</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 2: PROMOTION -->
+        <section id="page-promotion" class="page-view hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+            <div class="relative glass-panel rounded-3xl p-8 sm:p-12 overflow-hidden border border-brand-violet/30 neon-border">
+                <div class="relative z-10 max-w-2xl space-y-4">
+                    <span class="bg-gradient-to-r from-brand-violet to-brand-cyan text-slate-950 font-black text-[10px] px-3.5 py-1.5 rounded-full uppercase tracking-widest">Flash Promotion Event</span>
+                    <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">Exclusive Vouchers & Bundles</h1>
+                    <p class="text-gray-300 text-sm sm:text-base">Unlock dynamic discounts generated live for the MT Tech Hub website showcase.</p>
+
+                    <div class="pt-2 flex items-center space-x-4">
+                        <span class="text-xs text-gray-400 font-semibold uppercase">Deals Expire In:</span>
+                        <div class="flex items-center space-x-2 font-mono text-sm font-bold">
+                            <span id="timer-hours" class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-lg text-brand-cyan">08</span>
+                            <span>:</span>
+                            <span id="timer-minutes" class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-lg text-brand-cyan">42</span>
+                            <span>:</span>
+                            <span id="timer-seconds" class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-lg text-brand-cyan">19</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <h3 class="text-lg font-bold text-white flex items-center"><i class="fa-solid fa-ticket text-brand-cyan mr-2"></i> Instant Voucher Validator</h3>
+                <p class="text-xs text-gray-400">Try codes like
+                    <code class="text-brand-cyan bg-slate-900 px-2 py-0.5 rounded">MT10</code>,
+                    <code class="text-brand-cyan bg-slate-900 px-2 py-0.5 rounded">ULTRA25</code> or
+                    <code class="text-brand-cyan bg-slate-900 px-2 py-0.5 rounded">BUNDLE30</code>.
+                    A valid code is applied to your cart total.</p>
+                <div class="flex gap-3 max-w-md">
+                    <input type="text" id="coupon-input" placeholder="ENTER COUPON CODE"
+                        onkeydown="if(event.key==='Enter') applyCoupon()"
+                        class="uppercase bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm flex-grow focus:outline-none focus:border-brand-violet text-white">
+                    <button onclick="applyCoupon()" class="gradient-btn text-white font-bold px-6 py-2.5 rounded-xl text-sm">Apply</button>
+                </div>
+                <p id="coupon-message" class="text-xs font-bold hidden"></p>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="text-xl font-bold text-white">Active Discounts</h3>
+                <div id="promotions-list-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+            </div>
+        </section>
+
+        <!-- PAGE 3: ABOUT -->
+        <section id="page-about" class="page-view hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+            <div class="text-center max-w-3xl mx-auto space-y-4">
+                <span class="text-brand-cyan text-xs font-bold tracking-widest uppercase">MT Group Project Showcase</span>
+                <h1 class="text-3xl sm:text-5xl font-black text-white">Behind MT Tech Hub</h1>
+                <p class="text-gray-400 text-sm sm:text-base leading-relaxed">Built for our MT Group coursework, MT Tech Hub demonstrates dynamic JavaScript rendering, glassmorphic UI engineering, and multi-page web applications.</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="glass-panel p-6 rounded-2xl text-center space-y-1 border border-slate-800">
+                    <p class="text-3xl sm:text-4xl font-black gradient-text">100%</p>
+                    <p class="text-[11px] text-gray-400 uppercase font-bold tracking-wider">Dynamic JS Rendered</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl text-center space-y-1 border border-slate-800">
+                    <p class="text-3xl sm:text-4xl font-black gradient-text">3</p>
+                    <p class="text-[11px] text-gray-400 uppercase font-bold tracking-wider">Sub-Pages Included</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl text-center space-y-1 border border-slate-800">
+                    <p id="stat-products" class="text-3xl sm:text-4xl font-black gradient-text">0</p>
+                    <p class="text-[11px] text-gray-400 uppercase font-bold tracking-wider">Active Products</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl text-center space-y-1 border border-slate-800">
+                    <p class="text-3xl sm:text-4xl font-black gradient-text">24/7</p>
+                    <p class="text-[11px] text-gray-400 uppercase font-bold tracking-wider">Interactive Support</p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <h2 class="text-2xl font-bold text-white text-center">Project Development Team</h2>
+                <div id="team-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto"></div>
+            </div>
+
+            <div class="max-w-3xl mx-auto space-y-4">
+                <h3 class="text-xl font-bold text-white text-center mb-6">Frequently Asked Questions</h3>
+                <div class="space-y-3">
+                    <div class="glass-panel rounded-2xl p-5 cursor-pointer" onclick="toggleFaq(1)">
+                        <div class="flex justify-between items-center font-bold text-sm text-white">
+                            <span>How is slider data stored and loaded?</span>
+                            <i id="faq-icon-1" class="fa-solid fa-chevron-down text-xs text-brand-cyan transition-transform"></i>
+                        </div>
+                        <p id="faq-answer-1" class="hidden text-xs text-gray-400 mt-3 leading-relaxed">Slider data (images, banners, CTA links) is stored in a JavaScript array object and dynamically parsed into the hero section DOM on page load.</p>
+                    </div>
+
+                    <div class="glass-panel rounded-2xl p-5 cursor-pointer" onclick="toggleFaq(2)">
+                        <div class="flex justify-between items-center font-bold text-sm text-white">
+                            <span>Does this website require external backend services?</span>
+                            <i id="faq-icon-2" class="fa-solid fa-chevron-down text-xs text-brand-cyan transition-transform"></i>
+                        </div>
+                        <p id="faq-answer-2" class="hidden text-xs text-gray-400 mt-3 leading-relaxed">No, all catalog filtering, dynamic routing, cart storage, and modal popups are managed entirely on the front-end using Vanilla JavaScript.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-xl mx-auto glass-panel p-8 rounded-3xl space-y-6 border border-slate-800">
+                <h3 class="text-xl font-bold text-white text-center">Get In Touch</h3>
+                <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Full Name</label>
+                        <input type="text" required placeholder="John Doe"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-violet">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Email Address</label>
+                        <input type="email" required placeholder="john@example.com"
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-violet">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Message</label>
+                        <textarea rows="4" required placeholder="Your message..."
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-violet"></textarea>
+                    </div>
+                    <button type="submit" class="w-full gradient-btn text-white font-bold py-3 rounded-xl text-sm">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="glass-panel border-t border-slate-800 py-8 mt-16">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
+            <p class="text-sm text-gray-400">&copy; 2026 MT Group Project. All rights reserved.</p>
+            <p class="text-xs text-gray-600">Built with HTML5, CSS3 Glassmorphism, Tailwind CSS, and Vanilla JavaScript.</p>
+        </div>
+    </footer>
+
+    <!-- QUICK VIEW MODAL -->
+    <div id="quick-view-modal" onclick="if(event.target===this) closeQuickView()"
+        class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center z-50 p-4">
+        <div class="glass-panel rounded-3xl max-w-lg w-full p-6 relative shadow-2xl border border-slate-800 animate-modal">
+            <button onclick="closeQuickView()" aria-label="Close" class="absolute top-5 right-5 text-gray-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div id="modal-content" class="space-y-4"></div>
+        </div>
+    </div>
+
+    <!-- CART MODAL -->
+    <div id="cart-modal" onclick="if(event.target===this) toggleCartModal()"
+        class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden justify-end z-50">
+        <div class="glass-panel w-full max-w-md h-full shadow-2xl flex flex-col justify-between p-6 border-l border-slate-800">
+            <div class="space-y-4 flex-grow overflow-hidden flex flex-col">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                    <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-bag-shopping text-brand-cyan mr-2"></i> Cart Items</h3>
+                    <button onclick="toggleCartModal()" aria-label="Close cart" class="text-gray-400 hover:text-white">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+                <div id="cart-items-container" class="flex-grow overflow-y-auto space-y-3 pr-1"></div>
+            </div>
+
+            <div class="border-t border-slate-800 pt-4 space-y-3">
+                <div id="cart-discount-row" class="hidden justify-between text-xs text-green-400 font-semibold">
+                    <span id="cart-discount-label">Discount</span>
+                    <span id="cart-discount-amount">-$0.00</span>
+                </div>
+                <div class="flex justify-between font-bold text-white">
+                    <span>Total:</span>
+                    <span id="cart-total-price" class="gradient-text text-lg">$0.00</span>
+                </div>
+                <button onclick="checkoutCart()" class="w-full gradient-btn text-white font-bold py-3.5 rounded-xl transition">Checkout Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast"
+        class="fixed bottom-6 right-6 glass-panel border border-brand-violet/40 text-white px-5 py-3.5 rounded-2xl shadow-2xl transform translate-y-24 opacity-0 transition-all duration-300 z-[60] flex items-center space-x-3 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-brand-cyan text-lg"></i>
+        <span id="toast-message" class="text-xs font-semibold">Notification</span>
+    </div>
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script>
+        /* Fallback image if a remote image fails to load (hotlink-protected hosts like Pinterest often do) */
+        const FALLBACK_IMG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300'><rect width='100%25' height='100%25' fill='%231e293b'/><text x='50%25' y='50%25' fill='%2364748b' font-family='sans-serif' font-size='18' text-anchor='middle' dominant-baseline='middle'>No image</text></svg>";
+
+        /* Slider data */
+        const sliderData = [
+            {
+                id: 1, title: "Next-Gen Ultra Laptops",
+                subtitle: "Experience M3 Max and RTX 4090 power in an ultra-sleek chassis.",
+                badge: "HOT PROMOTION",
+                image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=80",
+                linkAction: "promotion"
+            },
+            {
+                id: 2, title: "Spatial Audio Headphones",
+                subtitle: "Studio acoustics with active ambient cancellation.",
+                badge: "NEW ARRIVAL",
+                image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=80",
+                linkAction: "home"
+            },
+            {
+                id: 3, title: "Smartwatches & Wearables",
+                subtitle: "Real-time biometric monitoring and OLED display.",
+                badge: "-25% OFF SALE",
+                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1200&q=80",
+                linkAction: "promotion"
+            }
+        ];
+
+        /* Products: every id is now UNIQUE, price = original price, discountPrice = lower sale price, rating <= 5 */
+        const productsData = [
+            { id: 1, name: "MaxBook Pro M1", category: "Laptop", price: 1299.99, discountPrice: 1099.99, badge: "PRO", rating: 4.9,
+              image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=600&q=80",
+              description: "Features 16GB RAM, 512GB NVMe SSD, and high-color accuracy 2K OLED display." },
+            { id: 2, name: "MaxBook Pro M2", category: "Laptop", price: 1799.99, discountPrice: 1599.99, badge: "PRO", rating: 4.9,
+              image: "https://i.pinimg.com/736x/10/97/a3/1097a3ff0fedcbd9a85ed3f6789b26c1.jpg",
+              description: "Features 16GB RAM, 1TB NVMe SSD, and high-color accuracy 4K OLED display." },
+            { id: 3, name: "MaxBook Pro M3", category: "Laptop", price: 2299.99, discountPrice: 2099.99, badge: "PRO", rating: 4.9,
+              image: "https://i.pinimg.com/1200x/b7/4f/a4/b74fa4bf86acd729116eaaa784d88f13.jpg",
+              description: "Features 16GB RAM, 1TB NVMe SSD, and high-color accuracy 4K OLED display." },
+            { id: 4, name: "MaxBook Pro M4", category: "Laptop", price: 2799.99, discountPrice: 2599.99, badge: "PRO", rating: 4.9,
+              image: "https://i.pinimg.com/736x/91/69/89/916989aecea22cf5720f904ed24545fe.jpg",
+              description: "Features 16GB RAM, 1TB NVMe SSD, and high-color accuracy 4K OLED display." },
+            { id: 5, name: "Acoustics Wireless Pro", category: "Audio", price: 249.99, discountPrice: 199.99, badge: "-20%", rating: 4.8,
+              image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80",
+              description: "Active Noise-Cancelling wireless headphones with 40-hour battery runtime." },
+
+            /* Phones */
+            { id: 6, name: "iPhone 15 Pro", category: "Smartphone", price: 1199.99, discountPrice: 1149.99, badge: "NEW", rating: 4.9,
+              image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80",
+              description: "Titanium casing with triple lens sensor array and 120Hz Super Retina display." },
+            { id: 7, name: "Samsung Galaxy S2026", category: "Smartphone", price: 1199.99, discountPrice: 1149.99, badge: "NEW", rating: 4.9,
+              image: "https://i.pinimg.com/736x/d9/46/87/d9468707441678e980e60c2b7553bf10.jpg",
+              description: "Titanium casing with triple lens sensor array and 200Hz Super Retina display." },
+            { id: 8, name: "Redmagic Phone 11", category: "Smartphone", price: 1099.99, discountPrice: 899.99, badge: "NEW", rating: 4.7,
+              image: "https://i.pinimg.com/1200x/ba/f3/91/baf391473293256b56af6776afb44b3a.jpg",
+              description: "Redmagic 11 fullscreen display with a 165Hz refresh rate." },
+            { id: 9, name: "Vivo X300 Ultra", category: "Smartphone", price: 899.99, discountPrice: 499.99, badge: "NEW", rating: 4.8,
+              image: "https://i.pinimg.com/1200x/1f/82/82/1f82821849c9902eec28c56ad85f6375.jpg",
+              description: "Vivo X300 fullscreen HD display with a 165Hz refresh rate." },
+            { id: 10, name: "Oppo Find X9 Ultra", category: "Smartphone", price: 1599.99, discountPrice: 899.99, badge: "NEW", rating: 4.9,
+              image: "https://i.pinimg.com/1200x/27/72/ac/2772ac1b883730b5db8c4a45764ce5e8.jpg",
+              description: "Oppo Find X9 fullscreen HD display with a 240Hz refresh rate." },
+
+            { id: 11, name: "Smart Watch V2", category: "Wearables", price: 299.99, discountPrice: 229.99, badge: "POPULAR", rating: 4.6,
+              image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80",
+              description: "Water-resistant health tracking watch with continuous ECG and built-in GPS." },
+
+            /* Gaming laptops */
+            { id: 12, name: "Asus ROG Strix G15", category: "Laptop", price: 1199.99, discountPrice: 1099.99, badge: "GAMING", rating: 4.9,
+              image: "https://i.pinimg.com/1200x/2a/8e/a4/2a8ea4fe80b2fa0f22a7b377028ce64e.jpg",
+              description: "RTX 4050 powered gaming rig with 240Hz screen and per-key RGB lighting." },
+            { id: 13, name: "Asus ROG Strix G16", category: "Laptop", price: 1799.99, discountPrice: 1599.99, badge: "GAMING", rating: 4.5,
+              image: "https://i.pinimg.com/736x/ed/4f/a4/ed4fa48cec2c01c85656940a4edcafb8.jpg",
+              description: "RTX 5050 powered gaming with 240Hz screen and per-key RGB lighting." },
+            { id: 14, name: "Asus ROG Strix G17", category: "Laptop", price: 2799.99, discountPrice: 2599.99, badge: "GAMING", rating: 4.7,
+              image: "https://i.pinimg.com/736x/55/da/36/55da3656467183bf258dde9ea0765402.jpg",
+              description: "RTX 5070 powered gaming with 300Hz screen and per-key RGB lighting." },
+            { id: 15, name: "Asus ROG Strix G18", category: "Laptop", price: 3499.99, discountPrice: 3199.99, badge: "GAMING", rating: 4.8,
+              image: "https://i.pinimg.com/1200x/93/b4/d8/93b4d828f76a696d8c1c51b8b467e974.jpg",
+              description: "RTX 5090 powered gaming with 300Hz screen and per-key RGB lighting." },
+
+            /* Earphones */
+            { id: 16, name: "Studio Earbuds Live", category: "Audio", price: 129.99, discountPrice: 89.99, badge: "SALE", rating: 4.5,
+              image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=600&q=80",
+              description: "Ergonomic true-wireless earbuds with IPX7 water protection and quick charge." },
+            { id: 17, name: "Black Shark T23", category: "Audio", price: 25.99, discountPrice: 15.99, badge: "SALE", rating: 4.3,
+              image: "https://i.pinimg.com/1200x/c4/de/8b/c4de8b7172d290deff6152e9c6f9fccf.jpg",
+              description: "Wireless earphones with Bluetooth 5.4, ENC call noise reduction and 40h battery." },
+            { id: 18, name: "Samsung Galaxy Buds3 Pro R360", category: "Audio", price: 25.99, discountPrice: 20.99, badge: "SALE", rating: 4.8,
+              image: "https://i.pinimg.com/736x/93/69/ab/9369ab7103a948f5b6ddf8a096c9e8af.jpg",
+              description: "Samsung Galaxy Buds3 Pro (R360), Silver." }
+        ];
+
+        /* Promotions: each has a real rule that is applied to the cart */
+        const promotionsData = [
+            { code: "MT10", title: "Student Voucher", discount: "10% OFF", description: "Applicable on Laptops and Smartwatches.", bg: "from-brand-violet to-purple-600" },
+            { code: "ULTRA25", title: "Audio Flash Sale", discount: "25% OFF", description: "Instant reduction on all premium headsets.", bg: "from-brand-cyan to-blue-600" },
+            { code: "BUNDLE30", title: "Accessories Pack", discount: "$30 REBATE", description: "Valid when purchasing 2 or more products.", bg: "from-purple-600 to-slate-900" }
+        ];
+
+        const teamData = [
+            { name: "Alex Morgan", role: "Project Lead & Dev", icon: "fa-user-astronaut" },
+            { name: "Sophea Chan", role: "UI/UX Designer", icon: "fa-palette" },
+            { name: "David Miller", role: "Frontend Engineer", icon: "fa-code" }
+        ];
+
+        /* State */
+        let currentSlide = 0;
+        let slideInterval = null;
+        let activeCategory = 'all';
+        let cart = [];
+        let appliedCoupon = null;
+        let toastTimeout = null;
+
+        /* ---------- Navigation ---------- */
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.add('hidden'));
+            const target = document.getElementById(`page-${pageId}`);
+            if (target) target.classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-white', 'bg-slate-800/90');
+                btn.classList.add('text-gray-400');
+            });
+            const activeNav = document.getElementById(`nav-${pageId}`);
+            if (activeNav) {
+                activeNav.classList.add('text-white', 'bg-slate-800/90');
+                activeNav.classList.remove('text-gray-400');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        /* ---------- Hero slider ---------- */
+        function initSlider() {
+            const container = document.getElementById('slider-container');
+            const indicators = document.getElementById('slider-indicators');
+            container.innerHTML = '';
+            indicators.innerHTML = '';
+
+            sliderData.forEach((slide, index) => {
+                const el = document.createElement('div');
+                el.className = `slide-item absolute inset-0 w-full h-full flex items-center p-8 sm:p-14 ${index === 0 ? 'opacity-100 z-10 scale-100' : 'opacity-0 z-0 scale-95 pointer-events-none'}`;
+                el.id = `slide-${index}`;
+                el.style.backgroundImage = `linear-gradient(to right, rgba(9,13,22,0.95), rgba(9,13,22,0.3)), url('${slide.image}')`;
+                el.style.backgroundSize = 'cover';
+                el.style.backgroundPosition = 'center';
+
+                el.innerHTML = `
+                    <div class="max-w-xl space-y-4">
+                        <span class="bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">${slide.badge}</span>
+                        <h2 class="text-3xl sm:text-5xl font-black text-white leading-tight tracking-tight">${slide.title}</h2>
+                        <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">${slide.subtitle}</p>
+                        <button onclick="navigateTo('${slide.linkAction}')" class="gradient-btn inline-flex items-center space-x-2 text-white font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider">
+                            <span>Shop Promotion</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>`;
+                container.appendChild(el);
+
+                const dot = document.createElement('button');
+                dot.className = `h-2 rounded-full transition-all ${index === 0 ? 'bg-brand-cyan w-8' : 'bg-white/40 w-2'}`;
+                dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+                dot.onclick = () => goToSlide(index);
+                dot.id = `dot-${index}`;
+                indicators.appendChild(dot);
+            });
+
+            startSlideAutoPlay();
+        }
+
+        function showSlide(index) {
+            sliderData.forEach((_, i) => {
+                const slide = document.getElementById(`slide-${i}`);
+                const dot = document.getElementById(`dot-${i}`);
+                if (i === index) {
+                    slide.classList.remove('opacity-0', 'z-0', 'scale-95', 'pointer-events-none');
+                    slide.classList.add('opacity-100', 'z-10', 'scale-100');
+                    dot.classList.add('bg-brand-cyan', 'w-8');
+                    dot.classList.remove('bg-white/40', 'w-2');
+                } else {
+                    slide.classList.add('opacity-0', 'z-0', 'scale-95', 'pointer-events-none');
+                    slide.classList.remove('opacity-100', 'z-10', 'scale-100');
+                    dot.classList.remove('bg-brand-cyan', 'w-8');
+                    dot.classList.add('bg-white/40', 'w-2');
+                }
+            });
+            currentSlide = index;
+        }
+
+        function nextSlide() { showSlide((currentSlide + 1) % sliderData.length); resetSlideTimer(); }
+        function prevSlide() { showSlide((currentSlide - 1 + sliderData.length) % sliderData.length); resetSlideTimer(); }
+        function goToSlide(i) { showSlide(i); resetSlideTimer(); }
+
+        function startSlideAutoPlay() {
+            clearInterval(slideInterval);
+            // Autoplay advances directly so it doesn't reset its own timer every tick
+            slideInterval = setInterval(() => showSlide((currentSlide + 1) % sliderData.length), 5000);
+        }
+        function resetSlideTimer() { startSlideAutoPlay(); }
+
+        /* ---------- Products ---------- */
+        function selectCategory(cat) {
+            activeCategory = cat;
+            document.querySelectorAll('.cat-tab').forEach(tab => {
+                const active = tab.dataset.cat === cat;
+                tab.classList.toggle('bg-slate-800', active);
+                tab.classList.toggle('text-white', active);
+                tab.classList.toggle('text-gray-400', !active);
+            });
+            filterProducts();
+        }
+
+        function renderProducts(items) {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+
+            if (items.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 text-center text-gray-500 space-y-3">
+                        <i class="fa-solid fa-box-open text-4xl text-gray-700"></i>
+                        <p class="text-sm">No electronics match your search criteria.</p>
+                    </div>`;
+                return;
+            }
+
+            items.forEach(product => {
+                const card = document.createElement('div');
+                card.className = "glass-panel rounded-2xl overflow-hidden border border-slate-800/80 hover:border-brand-violet/50 transition duration-300 flex flex-col justify-between group";
+                card.innerHTML = `
+                    <div>
+                        <div class="relative overflow-hidden bg-slate-950 h-48">
+                            <img src="${product.image}" alt="${product.name}" loading="lazy" referrerpolicy="no-referrer"
+                                 onerror="this.onerror=null;this.src=FALLBACK_IMG"
+                                 class="w-full h-full object-cover group-hover:scale-110 transition duration-500 opacity-90 group-hover:opacity-100">
+                            <span class="absolute top-3 left-3 bg-brand-violet/90 text-white text-[10px] font-black px-2.5 py-1 rounded-lg backdrop-blur-md">${product.badge}</span>
+                        </div>
+                        <div class="p-5 space-y-2">
+                            <div class="flex justify-between items-center text-xs text-amber-400 font-bold">
+                                <span><i class="fa-solid fa-star mr-1"></i>${product.rating.toFixed(1)}</span>
+                                <span class="text-brand-cyan text-[10px] uppercase font-bold tracking-wider">${product.category}</span>
+                            </div>
+                            <h3 class="font-bold text-white text-base line-clamp-1">${product.name}</h3>
+                            <p class="text-xs text-gray-400 line-clamp-2">${product.description}</p>
+                        </div>
+                    </div>
+                    <div class="p-5 pt-0 space-y-3">
+                        <div class="flex items-baseline space-x-2">
+                            <span class="text-lg font-black text-white">$${product.discountPrice.toFixed(2)}</span>
+                            <span class="text-xs text-gray-500 line-through">$${product.price.toFixed(2)}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="openQuickView(${product.id})" class="bg-slate-900 hover:bg-slate-800 text-gray-300 text-xs font-bold py-2.5 rounded-xl border border-slate-800 transition">Quick View</button>
+                            <button onclick="addToCart(${product.id})" class="gradient-btn text-white text-xs font-bold py-2.5 rounded-xl transition">Add To Cart</button>
+                        </div>
+                    </div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterProducts() {
+            const query = document.getElementById('search-input').value.trim().toLowerCase();
+            const filtered = productsData.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(query) || item.description.toLowerCase().includes(query);
+                const matchesCategory = activeCategory === 'all' || item.category === activeCategory;
+                return matchesSearch && matchesCategory;
+            });
+            renderProducts(filtered);
+        }
+
+        /* ---------- Quick view ---------- */
+        function openQuickView(id) {
+            const product = productsData.find(p => p.id === id);
+            if (!product) return;
+
+            document.getElementById('modal-content').innerHTML = `
+                <div class="flex items-center space-x-4 pr-6">
+                    <img src="${product.image}" alt="${product.name}" referrerpolicy="no-referrer"
+                         onerror="this.onerror=null;this.src=FALLBACK_IMG"
+                         class="w-24 h-24 object-cover rounded-2xl border border-slate-800">
+                    <div>
+                        <span class="text-[10px] font-bold text-brand-cyan uppercase tracking-wider">${product.category}</span>
+                        <h3 class="text-lg font-bold text-white">${product.name}</h3>
+                        <div class="flex items-center space-x-2 mt-1">
+                            <span class="text-lg font-black text-white">$${product.discountPrice.toFixed(2)}</span>
+                            <span class="text-xs text-gray-500 line-through">$${product.price.toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-400 leading-relaxed">${product.description}</p>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-[11px] space-y-1 text-gray-300">
+                    <p><i class="fa-solid fa-shield-halved text-brand-cyan mr-1"></i> Includes Official 2-Year MT Tech Hub Warranty</p>
+                    <p><i class="fa-solid fa-truck text-brand-violet mr-1"></i> Ready for Immediate Dispatch</p>
+                </div>
+                <button onclick="addToCart(${product.id}); closeQuickView();" class="w-full gradient-btn text-white font-bold py-3 rounded-xl text-xs uppercase tracking-wider">Add To Cart</button>`;
+
+            const modal = document.getElementById('quick-view-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeQuickView() {
+            const modal = document.getElementById('quick-view-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        /* ---------- Cart ---------- */
+        function addToCart(id) {
+            const item = productsData.find(p => p.id === id);
+            if (!item) return;
+
+            const existing = cart.find(c => c.id === id);
+            if (existing) existing.quantity += 1;
+            else cart.push({ ...item, quantity: 1 });
+
+            updateCartUI();
+            showToast(`Added ${item.name} to cart`);
+        }
+
+        function changeQty(id, delta) {
+            const item = cart.find(c => c.id === id);
+            if (!item) return;
+            item.quantity += delta;
+            if (item.quantity <= 0) cart = cart.filter(c => c.id !== id);
+            updateCartUI();
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(c => c.id !== id);
+            updateCartUI();
+        }
+
+        /* Work out the active coupon's discount for the current cart */
+        function calculateDiscount(subtotal) {
+            if (!appliedCoupon || cart.length === 0) return 0;
+            const sumWhere = fn => cart.filter(fn).reduce((s, i) => s + i.discountPrice * i.quantity, 0);
+            const totalQty = cart.reduce((s, i) => s + i.quantity, 0);
+
+            switch (appliedCoupon) {
+                case 'MT10': return sumWhere(i => i.category === 'Laptop' || i.category === 'Wearables') * 0.10;
+                case 'ULTRA25': return sumWhere(i => i.category === 'Audio') * 0.25;
+                case 'BUNDLE30': return totalQty >= 2 ? Math.min(30, subtotal) : 0;
+                default: return 0;
+            }
+        }
+
+        function updateCartUI() {
+            const count = document.getElementById('cart-count');
+            const container = document.getElementById('cart-items-container');
+            const total = document.getElementById('cart-total-price');
+            const discRow = document.getElementById('cart-discount-row');
+
+            count.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-gray-500 space-y-2">
+                        <i class="fa-solid fa-bag-shopping text-3xl"></i>
+                        <p class="text-xs">Your shopping cart is empty.</p>
+                    </div>`;
+                discRow.classList.add('hidden');
+                discRow.classList.remove('flex');
+                total.textContent = "$0.00";
+                return;
+            }
+
+            container.innerHTML = '';
+            let subtotalAll = 0;
+
+            cart.forEach(item => {
+                const subtotal = item.discountPrice * item.quantity;
+                subtotalAll += subtotal;
+
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between p-3 bg-slate-950/80 rounded-xl border border-slate-800";
+                row.innerHTML = `
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <img src="${item.image}" alt="" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src=FALLBACK_IMG" class="w-10 h-10 object-cover rounded-lg flex-shrink-0">
+                        <div class="min-w-0">
+                            <h4 class="text-xs font-bold text-white line-clamp-1">${item.name}</h4>
+                            <p class="text-[10px] text-gray-400">$${item.discountPrice.toFixed(2)} each</p>
+                            <div class="flex items-center space-x-2 mt-1">
+                                <button onclick="changeQty(${item.id}, -1)" aria-label="Decrease quantity" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-xs text-white leading-none">&minus;</button>
+                                <span class="text-xs font-bold text-white w-4 text-center">${item.quantity}</span>
+                                <button onclick="changeQty(${item.id}, 1)" aria-label="Increase quantity" class="w-5 h-5 rounded bg-slate-800 hover:bg-slate-700 text-xs text-white leading-none">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3 flex-shrink-0">
+                        <span class="text-xs font-bold text-white">$${subtotal.toFixed(2)}</span>
+                        <button onclick="removeFromCart(${item.id})" aria-label="Remove item" class="text-gray-500 hover:text-red-400 text-xs">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>`;
+                container.appendChild(row);
+            });
+
+            const discount = calculateDiscount(subtotalAll);
+            if (appliedCoupon && discount > 0) {
+                document.getElementById('cart-discount-label').textContent = `Voucher ${appliedCoupon}`;
+                document.getElementById('cart-discount-amount').textContent = `-$${discount.toFixed(2)}`;
+                discRow.classList.remove('hidden');
+                discRow.classList.add('flex');
+            } else {
+                discRow.classList.add('hidden');
+                discRow.classList.remove('flex');
+            }
+
+            total.textContent = `$${Math.max(0, subtotalAll - discount).toFixed(2)}`;
+        }
+
+        function toggleCartModal() {
+            const modal = document.getElementById('cart-modal');
+            modal.classList.toggle('hidden');
+            modal.classList.toggle('flex');
+        }
+
+        function checkoutCart() {
+            if (cart.length === 0) {
+                showToast("Your cart is empty!");
+                return;
+            }
+            showToast("Order placed successfully!");
+            cart = [];
+            appliedCoupon = null;
+            updateCartUI();
+            toggleCartModal();
+        }
+
+        /* ---------- Promotions ---------- */
+        function renderPromotionsPage() {
+            const container = document.getElementById('promotions-list-grid');
+            container.innerHTML = '';
+
+            promotionsData.forEach(promo => {
+                const card = document.createElement('div');
+                card.className = `bg-gradient-to-br ${promo.bg} p-6 rounded-2xl space-y-3 flex flex-col justify-between shadow-lg border border-white/10`;
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <span class="bg-white/20 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-md">${promo.discount}</span>
+                        <h3 class="text-lg font-bold text-white">${promo.title}</h3>
+                        <p class="text-xs text-gray-200">${promo.description}</p>
+                    </div>
+                    <div class="pt-3 flex justify-between items-center border-t border-white/20">
+                        <span class="font-mono text-xs font-bold bg-slate-950/50 px-2.5 py-1 rounded text-brand-cyan">${promo.code}</span>
+                        <button onclick="copyCoupon('${promo.code}')" class="text-xs bg-white text-slate-950 font-bold px-3 py-1.5 rounded-lg hover:bg-gray-100 transition">Copy Code</button>
+                    </div>`;
+                container.appendChild(card);
+            });
+        }
+
+        function applyCoupon() {
+            const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+            const msg = document.getElementById('coupon-message');
+            const match = promotionsData.find(p => p.code === code);
+            msg.classList.remove('hidden', 'text-green-400', 'text-red-400');
+
+            if (match) {
+                appliedCoupon = match.code;
+                msg.classList.add('text-green-400');
+                msg.textContent = `Voucher Activated: ${match.title} (${match.discount}). It will be applied to your cart.`;
+            } else {
+                appliedCoupon = null;
+                msg.classList.add('text-red-400');
+                msg.textContent = "Invalid promotion voucher code.";
+            }
+            updateCartUI();
+        }
+
+        function copyCoupon(code) {
+            document.getElementById('coupon-input').value = code;
+            if (navigator.clipboard) navigator.clipboard.writeText(code).catch(() => {});
+            showToast(`Copied code ${code}`);
+        }
+
+        /* Real countdown (was static before) */
+        function startCountdown() {
+            const end = Date.now() + (8 * 3600 + 42 * 60 + 19) * 1000;
+            const pad = n => String(n).padStart(2, '0');
+            const h = document.getElementById('timer-hours');
+            const m = document.getElementById('timer-minutes');
+            const s = document.getElementById('timer-seconds');
+
+            function tick() {
+                const left = Math.max(0, Math.floor((end - Date.now()) / 1000));
+                h.textContent = pad(Math.floor(left / 3600));
+                m.textContent = pad(Math.floor((left % 3600) / 60));
+                s.textContent = pad(left % 60);
+            }
+            tick();
+            setInterval(tick, 1000);
+        }
+
+        /* ---------- About / FAQ ---------- */
+        function renderTeam() {
+            const grid = document.getElementById('team-grid');
+            grid.innerHTML = '';
+            teamData.forEach(member => {
+                const card = document.createElement('div');
+                card.className = "glass-panel p-6 rounded-2xl text-center space-y-3 border border-slate-800";
+                card.innerHTML = `
+                    <div class="w-14 h-14 bg-gradient-to-tr from-brand-violet to-brand-cyan text-white rounded-2xl flex items-center justify-center mx-auto text-xl shadow-lg">
+                        <i class="fa-solid ${member.icon}"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white text-sm">${member.name}</h4>
+                        <p class="text-[11px] text-brand-cyan font-medium">${member.role}</p>
+                    </div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleFaq(id) {
+            document.getElementById(`faq-answer-${id}`).classList.toggle('hidden');
+            document.getElementById(`faq-icon-${id}`).classList.toggle('rotate-180');
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            showToast("Inquiry submitted successfully!");
+            document.getElementById('contact-form').reset();
+        }
+
+        /* ---------- Toast ---------- */
+        function showToast(msgText) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = msgText;
+
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            clearTimeout(toastTimeout); // avoid an earlier toast hiding a newer one early
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        /* Close modals with Escape */
+        document.addEventListener('keydown', e => {
+            if (e.key !== 'Escape') return;
+            closeQuickView();
+            const cartModal = document.getElementById('cart-modal');
+            if (!cartModal.classList.contains('hidden')) toggleCartModal();
+        });
+
+        /* ---------- Init ---------- */
+        window.addEventListener('load', () => {
+            initSlider();
+            renderProducts(productsData);
+            renderPromotionsPage();
+            renderTeam();
+            startCountdown();
+            updateCartUI();
+            document.getElementById('stat-products').textContent = productsData.length;
+        });
+    </script>
+</body>
+
+</html>
